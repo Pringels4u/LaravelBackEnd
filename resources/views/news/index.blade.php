@@ -3,9 +3,11 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Laatste Nieuws') }}
         </h2>
+        {{-- Debug removed — all good. --}}
         @if(auth()->check() && auth()->user()->is_admin)
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
-                <a href="{{ route('admin.news.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
+                {{-- Temporary inline styles so the button is visible before assets are built --}}
+                <a href="{{ route('admin.news.create') }}" id="admin-news-create" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700" style="background:#4f46e5;color:#ffffff;padding:8px 12px;border-radius:6px;display:inline-flex;align-items:center;">
                     + Nieuw Bericht Schrijven
                 </a>
             </div>
