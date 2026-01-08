@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('news_items', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image_path')->nullable(); // Hier slaan we de bestandsnaam op
+            $table->string('image')->nullable(); // Hier slaan we de bestandsnaam op
             $table->text('content');
             $table->timestamp('published_at')->useCurrent();
             $table->timestamps();
