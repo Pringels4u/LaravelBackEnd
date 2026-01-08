@@ -11,7 +11,13 @@ class NewsController extends Controller
     public function index()
     {
         $newsItems = NewsItem::orderBy('published_at', 'desc')->get();
-        return view('news.index', compact('newsItems'));
+
+        $favoriteIds = [];
+        if (auth()->check()) {
+            $favoriteIds = auth()->user()->favorites()->pluck('news_item_id')->toArray();
+        }
+
+        return view('news.index', compact('newsItems', 'favoriteIds'));
     }
 
     public function create()
@@ -49,6 +55,11 @@ class NewsController extends Controller
 
     public function show(NewsItem $newsItem)
     {
-        return view('news.show', compact('newsItem'));
+        $isFavorited = false;
+        if (auth()->check()) {
+            $isFavorited = auth()->user()->favorites()->where('news_item_id', $newsItem->id)->exists();
+        }
+
+        return view('news.show', compact('newsItem', 'isFavorited'));
     }
 }

@@ -21,4 +21,12 @@ class NewsItem extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    /**
+     * Many-to-many: users who favourited this news item.
+     */
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'news_user')->withTimestamps();
+    }
 }

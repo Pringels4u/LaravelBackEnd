@@ -21,6 +21,16 @@
                             <h3 class="text-2xl font-bold text-gray-900">{{ $item->title }}</h3>
                             <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($item->published_at)->format('d-m-Y H:i') }}</p>
                         </div>
+                        <div class="ml-4">
+                            @auth
+                                <form action="{{ route('news.favorite.toggle', $item) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="px-3 py-1 bg-{{ in_array($item->id, $favoriteIds ?? []) ? 'yellow-400' : 'gray-200' }} rounded text-sm">
+                                        {{ in_array($item->id, $favoriteIds ?? []) ? 'Favoriet' : 'Markeer' }}
+                                    </button>
+                                </form>
+                            @endauth
+                        </div>
                     </div>
                     <div class="mt-4 text-gray-700">
                         {{ Str::limit($item->content, 200) }}

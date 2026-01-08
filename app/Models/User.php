@@ -47,4 +47,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Many-to-many: the news items this user has favourited.
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(\App\Models\NewsItem::class, 'news_user')->withTimestamps();
+    }
 }
