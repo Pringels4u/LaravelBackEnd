@@ -29,6 +29,7 @@ class ContactFormSubmitted extends Mailable
     {
         return $this->subject($this->messageModel->subject ?? 'Nieuw contactbericht')
                     ->view('emails.contact')
-                    ->with(['contact' => $this->messageModel]);
+                    ->with(['contact' => $this->messageModel])
+                    ->replyTo($this->messageModel->email, $this->messageModel->name);
     }
 }

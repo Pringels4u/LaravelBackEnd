@@ -40,6 +40,22 @@ Alternative: quick test without Herd (PHP built-in server)
 php -S 127.0.0.1:8000 -t public
 ```
 
+Mail configuration
+------------------
+Set the sender address and name so emails look correct. Add the following to your `.env` (or edit existing keys):
+
+```
+MAIL_MAILER=log        # use 'log' for development, change to smtp for real sending
+MAIL_FROM_ADDRESS=no-reply@laravelbackend.test
+MAIL_FROM_NAME="LaravelBackEnd"
+
+# Optional: fallback admin e-mail if no admin user exists in the DB
+ADMIN_EMAIL=admin@ehb.be
+```
+
+If you keep `MAIL_MAILER=log`, outgoing mails will be written to `storage/logs/laravel.log` — useful for development and for verifying the contact form behaviour.
+
+
 Assignment checklist (current status)
 - Login system: implemented (registration, login, logout, remember me, password reset, email verification) — COMPLETE
 - User roles: `is_admin` boolean exists and default admin seeded — PARTIAL (you can promote/demote manually; no admin UI to manage roles yet)
