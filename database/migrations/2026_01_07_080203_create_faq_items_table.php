@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('faq_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->string('question'); // <--- Deze mist hij nu waarschijnlijk
+            $table->text('answer');   // <--- Controleer ook deze
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

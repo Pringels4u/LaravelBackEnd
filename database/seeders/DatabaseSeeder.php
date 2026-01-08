@@ -15,12 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Maak de admin gebruiker aan
+        \App\Models\User::create([
+            'name' => 'Admin User',
+            'username' => 'admin',
+            'email' => 'admin@ehb.be',
+            'email_verified_at' => now(),
+            'password' => \Illuminate\Support\Facades\Hash::make('Password!321'),
+            'is_admin' => true, // Dit maakt hem admin!
         ]);
-        $this->call(FaqSeeder::class);
-    }
+    // Roep je FAQ seeder aan
+    $this->call(FaqSeeder::class);
+}
 }

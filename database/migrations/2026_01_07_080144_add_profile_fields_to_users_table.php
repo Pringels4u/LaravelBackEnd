@@ -12,10 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->string('username')->unique()->nullable()->after('name');
+            $table->boolean('is_admin')->default(false)->after('password');
+            $table->date('birthday')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('profile_picture')->nullable();
         });
     }
-
     /**
      * Reverse the migrations.
      */
