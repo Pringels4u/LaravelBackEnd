@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -24,11 +25,14 @@ Route::middleware('auth')->group(function () {
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{newsItem}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Admin routes (Voor nu even alleen op auth, we voegen de admin-check zo toe)
 Route::middleware(['auth'])->group(function () {
     Route::resource('admin/news', NewsController::class)->except(['index', 'show']);
     Route::resource('admin/faq', FaqController::class)->except(['index']);
+    Route::get('admin/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
 });
 
 

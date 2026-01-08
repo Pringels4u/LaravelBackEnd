@@ -1,59 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## LaravelBackEnd — project README
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains a small Laravel application built as a student project. It implements authentication, user profiles, a news system and a FAQ section. The app is developed to run in a local development environment using Herd (preferred) or PHP's built-in server.
 
-## About Laravel
+Quick facts
+- Dev host used during development: http://laravelbackend.test (Herd)
+- Default seeded admin account (created by DatabaseSeeder):
+	- Username: admin
+	- Email: admin@ehb.be
+	- Password: Password!321
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Minimal setup (Herd)
+1. Install Herd and add a site pointing to this project folder (the repository root). Set the host to `laravelbackend.test` and ensure your hosts file is configured by Herd.
+2. Copy `.env.example` to `.env` and configure database/mail as needed.
+3. Run composer install and npm install if you need assets:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```powershell
+composer install
+npm install
+npm run build
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+4. Run migrations and seed the default admin:
 
-## Learning Laravel
+```powershell
+php artisan migrate --seed
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+5. Create the public storage symlink so uploaded images are served:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```powershell
+php artisan storage:link
+```
 
-## Laravel Sponsors
+6. Open http://laravelbackend.test in your browser.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Alternative: quick test without Herd (PHP built-in server)
 
-### Premium Partners
+```powershell
+php -S 127.0.0.1:8000 -t public
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Assignment checklist (current status)
+- Login system: implemented (registration, login, logout, remember me, password reset, email verification) — COMPLETE
+- User roles: `is_admin` boolean exists and default admin seeded — PARTIAL (you can promote/demote manually; no admin UI to manage roles yet)
+- Profile page: implemented and editable by the user (username, birthday, bio, profile picture) — COMPLETE
+- News: admins can create, edit, delete news items; public can list and view details — PARTIAL (create/edit routes exist and views exist; file uploads work; ensure migrations match column names) 
+- FAQ: categories and Q/A implemented, admins can manage via routes/controllers — PARTIAL (basic CRUD exists, but no admin UI styling)
+- Contact form: NOT YET IMPLEMENTED (the assignment requires an email to admin on contact form submit)
+- Many-to-many relation: NOT YET IMPLEMENTED (assignment requests at least one many-to-many)
 
-## Contributing
+Technical checklist
+- Views: multiple layouts present (`resources/views/layouts/app.blade.php` and `layouts/guest.blade.php`) — OK
+- Components used for form inputs and buttons — OK
+- CSRF protection: forms use `@csrf` — OK
+- XSS: views escape content by default and use `e()` where needed — OK
+- Routes: controllers are used; admin routes are grouped under `admin/*` — OK
+- Migrations & seeders: present and `php artisan migrate --seed` should work — OK
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+What still needs to be done to meet the full assignment
+- Implement contact form, Mailable to send admin an email and (optional) admin panel to view messages.
+- Add at least one many-to-many relationship (suggestion: user favorites/news bookmarks) and small UI for it.
+- Add an admin UI to promote/demote users and create users manually (or document how to do this via tinker/seeders).
+- Add client-side validation for forms (basic JS) to meet the 'client-side validation' requirement.
+- Improve README with source references you used for code snippets or tutorials (you must cite copied tutorial sections you used).
 
-## Code of Conduct
+Sources / libraries used
+- Laravel framework (see composer.json)
+- Authentication scaffolding from Laravel Breeze (dev dependency)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+If you want, I can implement the contact form + mail and the many-to-many favorite feature next (these are relatively small changes).
 
-## Security Vulnerabilities
+----
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The original Laravel README follows below for reference.
