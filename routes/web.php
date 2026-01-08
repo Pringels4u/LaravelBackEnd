@@ -9,7 +9,8 @@ use App\Http\Controllers\NewsFavoriteController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Make the site homepage show the news index for visitors
+    return redirect()->route('news.index');
 });
 
 Route::get('/dashboard', function () {
