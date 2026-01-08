@@ -42,10 +42,16 @@
                                 {{ __('Profile Settings') }}
                             </x-dropdown-link>
 
-                            {{-- Link naar publiek profiel --}}
-                            <x-dropdown-link :href="route('user.show', Auth::user()->username)">
-                                {{ __('My Public Profile') }}
-                            </x-dropdown-link>
+                            {{-- Link naar publiek profiel: alleen tonen als gebruiker een username heeft, anders naar profiel instellingen --}}
+                            @if(Auth::user()->username)
+                                <x-dropdown-link :href="route('user.show', Auth::user()->username)">
+                                    {{ __('My Public Profile') }}
+                                </x-dropdown-link>
+                            @else
+                                <x-dropdown-link :href="route('profile.edit')">
+                                    {{ __('My Public Profile') }}
+                                </x-dropdown-link>
+                            @endif
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

@@ -31,10 +31,14 @@ Route::get('/contact', [ContactController::class, 'create'])->name('contact.crea
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Admin routes (grouped under /admin with name prefix 'admin.')
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+// Protected by both auth and admin middleware alias (see bootstrap/app.php)
+Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('news', NewsController::class)->except(['index', 'show']);
     Route::resource('faq', FaqController::class)->except(['index']);
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');
+    // Admin user management
+    Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::post('users/{user}/toggle-admin', [\App\Http\Controllers\Admin\UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
 });
 
 
