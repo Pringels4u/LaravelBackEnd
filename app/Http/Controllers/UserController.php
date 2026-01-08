@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * Toon het publieke profiel van een gebruiker.
      */
-    public function show(User user): View
+    public function show(User $user): View
     {
         return view('user.show', compact('user'));
     }
