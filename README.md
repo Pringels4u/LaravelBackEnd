@@ -25,35 +25,60 @@ Getting started (Herd — recommended)
 This project is intended to be run with Herd for development and evaluation. If your teacher will run the project with Herd, follow these minimal steps:
 
 1. Copy `.env.example` to `.env` and configure your DB and mail settings if you want to change them.
+# LaravelBackEnd — Chiro Lembeek studentproject
 
-2. Install PHP dependencies:
+Een overzichtelijke Laravel-demoapplicatie gemaakt als studentproject, gethematiseerd rond "Chiro Lembeek". De app bevat alle functionele minimumvereisten voor het examenproject (authenticatie, profielen, nieuws, FAQ, contact) en enkele extra's (favorieten, reacties, admin-overzicht voor contactberichten).
+
+Inhoudelijk overzicht
+- Authenticatie (registratie, login, wachtwoord-reset, e-mailverificatie)
+- Publieke profielpagina's met username, verjaardag, bio en profielfoto
+- Nieuwsitems: admin CRUD, publieke index en detailpagina
+- FAQ: categorieën met vraag/antwoord, admin CRUD
+- Contactformulier: berichten worden opgeslagen en naar de eerste admin gemaild
+- Extra: nieuws-favorieten (many-to-many pivot) en nieuwsreacties (comments)
+
+Quick facts
+- Development host gebruikt bij ontwikkeling: http://laravelbackend.test (Herd aanbevolen)
+- Standaard seeded admin-account (DatabaseSeeder):
+  - Username: admin
+  - Email: admin@ehb.be
+  - Password: Password!321
+
+Benodigde software
+- PHP (8.1+ aanbevolen, afhankelijk van je Composer packages)
+- Composer
+- Een database (MySQL, MariaDB, SQLite, ...)
+- Optioneel: Herd voor eenvoudiger lokale hosting, of `php artisan serve`/built-in PHP server
+
+Installatie en lokaal draaien (PowerShell)
+1. Kopieer `.env.example` naar `.env` en configureer je database- en mailinstellingen.
 
 ```powershell
 composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
-3. Run migrations and seed the sample data:
+2. Database migreren en seeders uitvoeren:
 
 ```powershell
 php artisan migrate --seed
 ```
 
-4. Create the public storage symlink so uploaded images are served:
+3. Maak de public storage link zodat geüploade afbeeldingen beschikbaar zijn:
 
 ```powershell
 php artisan storage:link
 ```
 
-5. In Herd, add a new site and point it to the project root (the repository folder). Configure the hostname (for example `laravelbackend.test`) if needed and start the site. Herd will serve the application and handle asset linking for you — no `npm` or `vite` steps are required when using Herd.
-
-If you do not use Herd and want to run the project manually, a quick alternative is:
+4. Start de ontwikkelserver (of gebruik Herd):
 
 ```powershell
-php -S 127.0.0.1:8000 -t public
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-Mail configuration (development)
-Add or change the following in your `.env`:
+Mail configuratie (ontwikkeling)
+Pas in `.env` de volgende waarden aan om mails te loggen in plaats van echt te versturen:
 
 ```env
 MAIL_MAILER=log
@@ -61,56 +86,51 @@ MAIL_FROM_ADDRESS=no-reply@chirolembeek.test
 MAIL_FROM_NAME="Chiro Lembeek"
 ```
 
-When using `MAIL_MAILER=log` outgoing messages are written to `storage/logs/laravel.log` which is handy for development and verifying the contact flow.
+Wanneer `MAIL_MAILER=log` staat, worden uitgaande mails weggeschreven naar `storage/logs/laravel.log`.
 
-Data seeded by the project
-- A default admin user is created when seeding. The seeder is idempotent and will not fail if the admin already exists.
-- Sample FAQ categories and items are seeded (theme: Chiro Lembeek).
-- Sample news items are seeded so the dashboard and news index show content immediately.
-
-Key features implemented
-- Public dashboard: the dashboard is accessible to guests and includes a themed hero, quick actions, upcoming activities, recent news and FAQ snippets.
-- News comments: authenticated users can leave comments on news detail pages; comments are visible on the news details page.
-- Admin features: under `/admin` (protected by auth + admin middleware)
-	- News CRUD (create / edit / delete)
-	- FAQ CRUD
-	- Manage users: list, create users manually, promote/demote admin
-	- View contact messages
-- Favorites: logged-in users can favorite news items (many-to-many pivot table).
-
-Routes of interest
+Belangrijke routes (kort)
 - Public
-	- GET /news — news index
-	- GET /news/{newsItem} — news detail (shows comments)
-	- POST /news/{newsItem}/comments — store comment (requires auth)
-	- GET /faq — FAQ index
-	- GET /contact — contact form
-	- POST /contact — submit contact message
+  - GET /news — nieuwsindex
+  - GET /news/{newsItem} — nieuwsdetail (reacties zichtbaar)
+  - GET /faq — FAQ overzicht
+  - GET /contact — contactformulier
+  - POST /contact — submit contactbericht
+- Admin (prefix `/admin`, beschermd door `auth` + `admin` middleware)
+  - /admin/news — nieuws CRUD (create/edit/delete)
+  - /admin/faq — FAQ CRUD
+  - /admin/users — gebruikersbeheer (aanmaken, promoten/demoten)
+  - /admin/contacts — overzicht contactberichten
 
-- Admin (prefix `/admin`, auth + admin middleware)
-	- /admin/news — admin news routes (resource controller minus index/show)
-	- /admin/faq — admin FAQ routes
-	- /admin/users — list/create/store and toggle admin
-	- /admin/contacts — view contact messages
+Technische highlights
+- Views: meerdere layouts aanwezig (`resources/views/layouts/app.blade.php`, `guest.blade.php`) en Blade components worden gebruikt (x-app-layout e.d.).
+- CSRF/XSS: Blade escaping en `@csrf` in formulieren toegepast.
+- Models & relaties: Eloquent-modellen per entiteit, met minimaal één one-to-many (Category -> FaqItem) en één many-to-many (User <-> NewsItem).
 
-Troubleshooting
-- If you see missing styling, ensure frontend assets are built with `npm run dev` or `npm run build` and that `@vite` in `resources/views/layouts/app.blade.php` points to the built files.
-- If a seeder fails with unique constraint errors, re-run `php artisan migrate:fresh --seed` to reset the DB (be careful: this drops data).
+Seeding
+- `DatabaseSeeder` maakt idempotent de standaard admin aan en roept `FaqSeeder` en `NewsSeeder` aan zodat de site direct content toont.
 
-Testing and next steps
-- Tests: basic feature tests are not yet written; recommended tests to add:
-	1. Contact form submission stores message and logs mail
-	2. Admin can create news and it appears on the index
-	3. Authenticated user can favorite a news item and toggle the favorite
-	4. Authenticated user can post a comment and see it on the news detail
+Tests
+- Er zijn nog geen uitgebreide feature-tests toegevoegd. Aanbevolen tests om toe te voegen:
+  1. Contactformulier: controleer dat bericht opgeslagen wordt en mail gelogd wordt.
+  2. News CRUD: admin kan nieuws aanmaken en het verschijnt op de index.
+  3. Favorieten & comments: geauthende gebruiker kan favorieten togglen en een reactie plaatsen.
 
-- Possible enhancements:
-	- Add moderation (edit/delete) for comments by admins
-	- Paginate comments on news pages
-	- Convert inline fallback styles to proper Tailwind classes and rebuild assets
+Bronvermelding
+- Laravel documentatie — https://laravel.com/docs
+- Gebruikte packages en scaffolding: controllers en views voor authenticatie staan onder `app/Http/Controllers/Auth` en `resources/views/auth` — als je een externe tutorial of package (bv. Laravel Breeze) hebt gebruikt, vermeld dat hier expliciet.
+- UI: Tailwind CSS (indien gebruikt) — https://tailwindcss.com
 
-If you want, I can add the feature tests next or implement comment moderation — tell me which one you'd prefer and I'll add it to the TODOs.
+Aanbevelingen / bekende verbeterpunten
+- Voeg enkele feature-tests toe om regressies te voorkomen.
+- Verwijder geüploade afbeeldingen bij verwijderen van een gebruiker (cleanup) — momenteel wordt profielfoto opschonen niet expliciet gedaan.
+- Overweeg paginatie op de nieuwsindex en voor reacties wanneer veel items aanwezig zijn.
+- Overweeg het mailable `ContactFormSubmitted` queueable te maken voor betere performance bij veel verkeer.
 
-----
+Contact / inleveren
+- Zorg dat je GitHub-repo publiek toegankelijk is en geef de link als comment bij je inlevering. De docent zal `git clone <url>` uitvoeren.
 
-Original project README (trimmed) — kept for reference.
+Als je wil kan ik nu:
+- De README verder toespitsen op jouw exacte gebruikte packages (zeg welke je gebruikte),
+- 3 korte feature-tests schrijven en runnen, of
+- File-cleanup implementeren bij user-delete.
+Kies één taak en ik voer het meteen uit.
