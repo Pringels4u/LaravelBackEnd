@@ -49,4 +49,49 @@
             </div>
         </div>
     </div>
+    {{-- Comments section --}}
+    <div class="py-8">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">Reacties</h3>
+
+                @if(session('success'))
+                    <div class="mb-4 text-green-700">{{ session('success') }}</div>
+                @endif
+
+                @if($newsItem->comments->isEmpty())
+                    <p class="text-gray-600">Nog geen reacties. Wees de eerste!</p>
+                @else
+                    <div class="space-y-4 mb-4">
+                        @foreach($newsItem->comments as $comment)
+                            <div class="border rounded p-3">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <strong>{{ $comment->user->name }}</strong>
+                                        <div class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-gray-800">{{ nl2br(e($comment->content)) }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                @auth
+                    <form method="POST" action="{{ route('news.comments.store', $newsItem) }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700">Laat een reactie achter</label>
+                            <textarea name="content" rows="4" required class="mt-1 block w-full border rounded p-2">{{ old('content') }}</textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="px-3 py-1 bg-indigo-600 text-white rounded" style="background:#4f46e5;color:#fff;padding:8px 12px;border-radius:6px;">Plaats reactie</button>
+                        </div>
+                    </form>
+                @else
+                    <p class="text-gray-600">Je moet <a href="{{ route('login') }}" class="text-indigo-600">inloggen</a> om te reageren.</p>
+                @endauth
+            </div>
+        </div>
+    </div>
 </x-app-layout>

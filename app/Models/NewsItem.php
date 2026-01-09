@@ -29,4 +29,12 @@ class NewsItem extends Model
     {
         return $this->belongsToMany(\App\Models\User::class, 'news_user')->withTimestamps();
     }
+
+    /**
+     * Comments for this news item.
+     */
+    public function comments()
+    {
+        return $this->hasMany(\App\Models\NewsComment::class)->orderBy('created_at', 'asc');
+    }
 }

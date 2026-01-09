@@ -55,4 +55,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\NewsItem::class, 'news_user')->withTimestamps();
     }
+
+    /**
+     * Comments the user has posted on news items.
+     */
+    public function comments()
+    {
+        return $this->hasMany(\App\Models\NewsComment::class);
+    }
 }
