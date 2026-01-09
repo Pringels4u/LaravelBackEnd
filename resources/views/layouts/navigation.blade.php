@@ -20,6 +20,9 @@
                     <x-nav-link :href="route('news.index')" :active="request()->routeIs('news.index')">
                         {{ __('Nieuws') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('contact.create')" :active="request()->routeIs('contact.create')">
+                        {{ __('Contact') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -94,6 +97,9 @@
             <x-responsive-nav-link :href="route('news.index')" :active="request()->routeIs('news.index')">
                 {{ __('Nieuws') }}
             </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('contact.create')" :active="request()->routeIs('contact.create')">
+                    {{ __('Contact') }}
+                </x-responsive-nav-link>
         </div>
 
         @auth
