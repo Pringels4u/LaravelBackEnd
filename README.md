@@ -110,27 +110,56 @@ Seeding
 - `DatabaseSeeder` maakt idempotent de standaard admin aan en roept `FaqSeeder` en `NewsSeeder` aan zodat de site direct content toont.
 
 Tests
-- Er zijn nog geen uitgebreide feature-tests toegevoegd. Aanbevolen tests om toe te voegen:
-  1. Contactformulier: controleer dat bericht opgeslagen wordt en mail gelogd wordt.
-  2. News CRUD: admin kan nieuws aanmaken en het verschijnt op de index.
-  3. Favorieten & comments: geauthende gebruiker kan favorieten togglen en een reactie plaatsen.
+- In deze repository zijn (nog) geen automatische feature-tests opgenomen in de codebase. Hieronder vind je drie concrete, reproduceerbare test-cases die je kunt implementeren met PHPUnit / Laravel's test helpers. Voeg ze toe onder `tests/Feature/` (bijv. `ContactTest`, `NewsAdminTest`, `NewsInteractionTest`) en voer ze lokaal uit met `php artisan test`.
+
+Aanbevolen testcases (specificaties)
+1) Contactformulier (tests/Feature/ContactTest.php)
+   - Doel: verifiëren dat een ingevuld contactformulier een record in de database creëert en dat er een e-mail wordt gegenereerd/logged.
+   - Setup: geen authenticatie vereist.
+   - Stappen:
+     1. POST naar route `contact.store` met geldige velden (name, email, message).
+     2. Assert: response redirect met success flash.
+     3. Assert: een record bestaat in `contact_messages` met dezelfde inhoud.
+     4. Assert: Mail is gelogd of Mailable is verzonden (gebruik `Mail::fake()` en `Mail::assertSent(ContactFormSubmitted::class)`).
+
+2) News CRUD (tests/Feature/NewsAdminTest.php)
+   - Doel: controleren dat een admin nieuws kan aanmaken en dat het zichtbaar is op de publieke index.
+   - Setup: maak een gebruiker met `is_admin = true` (factory of rechtstreeks aanmaken) en log in als die user.
+   - Stappen:
+     1. POST naar admin nieuws store-route met titel, content en published_at.
+     2. Assert: redirect naar admin index met success.
+     3. Assert: database bevat het nieuws item.
+     4. GET naar `news.index` en assert dat titel zichtbaar is in de response.
+
+3) Favorieten & comments (tests/Feature/NewsInteractionTest.php)
+   - Doel: verifiëren dat geauthenticeerde gebruikers een nieuwsitem kunnen favoriet zetten/ontzetten en een reactie kunnen plaatsen.
+   - Setup: maak een gebruiker en een nieuwsitem (factories), log in.
+   - Stappen:
+     1. POST naar favorite toggle-route en assert dat de pivot `news_user` een entry bevat.
+     2. POST naar comments store-route met content en assert dat `news_comments` een record bevat.
+     3. Optioneel: toggle favorite opnieuw en assert dat de pivot entry verdwenen is.
+
+Hoe tests lokaal uit te voeren
+1. Zorg dat je test-database ingesteld is in `.env.testing` of gebruik sqlite in memory door in `.env.testing` te zetten:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=:memory:
+```
+
+2. Voer de tests uit met:
+
+```powershell
+php artisan test
+# of direct met phpunit
+vendor\bin\phpunit
+```
+
+3. Tijdens het schrijven van tests kun je helpers zoals `Mail::fake()` en `Storage::fake('public')` gebruiken om side-effects te isoleren.
+
+Als je wil, kan ik deze drie testbestanden nu voor je aanmaken en direkt uitvoeren (ik schrijf ze in `tests/Feature/` en run `php artisan test`). Zeg of ik dat direct moet doen en of je wilt dat ik factories/mocks gebruik of echte seed-data.
 
 Bronvermelding
 - Laravel documentatie — https://laravel.com/docs
 - Gebruikte packages en scaffolding: controllers en views voor authenticatie staan onder `app/Http/Controllers/Auth` en `resources/views/auth` — als je een externe tutorial of package (bv. Laravel Breeze) hebt gebruikt, vermeld dat hier expliciet.
 - UI: Tailwind CSS (indien gebruikt) — https://tailwindcss.com
-
-Aanbevelingen / bekende verbeterpunten
-- Voeg enkele feature-tests toe om regressies te voorkomen.
-- Verwijder geüploade afbeeldingen bij verwijderen van een gebruiker (cleanup) — momenteel wordt profielfoto opschonen niet expliciet gedaan.
-- Overweeg paginatie op de nieuwsindex en voor reacties wanneer veel items aanwezig zijn.
-- Overweeg het mailable `ContactFormSubmitted` queueable te maken voor betere performance bij veel verkeer.
-
-Contact / inleveren
-- Zorg dat je GitHub-repo publiek toegankelijk is en geef de link als comment bij je inlevering. De docent zal `git clone <url>` uitvoeren.
-
-Als je wil kan ik nu:
-- De README verder toespitsen op jouw exacte gebruikte packages (zeg welke je gebruikte),
-- 3 korte feature-tests schrijven en runnen, of
-- File-cleanup implementeren bij user-delete.
-Kies één taak en ik voer het meteen uit.
