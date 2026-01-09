@@ -33,16 +33,20 @@
                                 <td class="px-4 py-2">{{ $user->email }}</td>
                                 <td class="px-4 py-2">{{ $user->is_admin ? 'Ja' : 'Nee' }}</td>
                                 <td class="px-4 py-2">
-                                    @if(auth()->user()->id !== $user->id)
-                                    <form method="POST" action="{{ route('admin.users.toggleAdmin', $user) }}">
-                                        @csrf
-                                        <button type="submit" class="px-3 py-1 bg-indigo-600 text-white rounded">
-                                            {{ $user->is_admin ? 'Demote' : 'Promote' }}
-                                        </button>
-                                    </form>
-                                    @else
-                                        <em>Jij</em>
-                                    @endif
+                                    <div class="flex items-center gap-2">
+                                        <a href="{{ route('user.show', $user) }}" class="text-sm px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">Bekijk</a>
+
+                                        @if(auth()->user()->id !== $user->id)
+                                            <form method="POST" action="{{ route('admin.users.toggleAdmin', $user) }}" onsubmit="return confirm('{{ $user->is_admin ? 'Weet je zeker dat je deze gebruiker adminrechten wilt afnemen?' : 'Weet je zeker dat je deze gebruiker admin wilt maken?' }}');" style="display:inline">
+                                                @csrf
+                                                <button type="submit" class="text-sm px-2 py-1 {{ $user->is_admin ? 'bg-red-600' : 'bg-indigo-600' }} text-white rounded">
+                                                    {{ $user->is_admin ? 'Haal admin af' : 'Maak admin' }}
+                                                </button>
+                                            </form>
+                                        @else
+                                            <em class="text-sm italic text-gray-500">Jij</em>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

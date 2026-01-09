@@ -6,7 +6,12 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <form action="{{ route('admin.news.update', $newsItem) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                {{-- DEBUG: tijdelijk zichtbaar maken van form action en id voor troubleshooting --}}
+                <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-300 text-sm text-yellow-800">
+                    DEBUG: form action = <strong>{{ url('admin/news/' . $newsItem->id) }}</strong>
+                    <br>DEBUG: news id = <strong>{{ $newsItem->id }}</strong>
+                </div>
+                <form action="{{ url('admin/news/' . $newsItem->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     @method('PUT')
 
@@ -37,14 +42,16 @@
 
                     <div class="flex items-center gap-4">
                         <x-primary-button>Opslaan</x-primary-button>
-
-                        <form action="{{ route('admin.news.destroy', $newsItem) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bericht wilt verwijderen?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded">Verwijder bericht</button>
-                        </form>
                     </div>
                 </form>
+
+                <div class="mt-4">
+                    <form action="{{ url('admin/news/' . $newsItem->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bericht wilt verwijderen?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded">Verwijder bericht</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

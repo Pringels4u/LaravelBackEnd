@@ -26,8 +26,10 @@
                             <div class="ml-4">
                                 @auth
                                     @if(auth()->user()->is_admin)
-                                        <a href="{{ route('admin.news.edit', $item) }}" class="text-sm px-2 py-1 bg-indigo-600 text-white rounded">Bewerk</a>
-                                    @endif
+                                            <form action="{{ route('admin.news.edit', $item) }}" method="GET" style="display:inline">
+                                                <button type="submit" class="text-sm px-2 py-1 bg-indigo-600 text-white rounded" style="background:#4f46e5;color:#ffffff;padding:6px 8px;border-radius:6px;border:none;">Bewerk</button>
+                                            </form>
+                                        @endif
                                 @endauth
                             </div>
                         <div class="ml-4">

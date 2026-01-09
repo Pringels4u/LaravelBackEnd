@@ -34,13 +34,14 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource (admin only).
      */
-    public function edit(NewsItem $newsItem)
+    public function edit(NewsItem $news)
     {
         if (!Auth::check() || !Auth::user()->is_admin) {
             abort(403);
         }
 
-        return view('admin.news.edit', compact('newsItem'));
+        // pass the model to the view under the expected variable name
+        return view('admin.news.edit', ['newsItem' => $news]);
     }
 
     public function store(Request $request)
@@ -69,7 +70,7 @@ class NewsController extends Controller
     /**
      * Update the specified news item (admin only).
      */
-    public function update(Request $request, NewsItem $newsItem)
+    public function update(Request $request, NewsItem $news)
     {
         if (!Auth::check() || !Auth::user()->is_admin) {
             abort(403);
@@ -85,35 +86,35 @@ class NewsController extends Controller
         // Afbeelding vervangen indien aanwezig
         if ($request->hasFile('image')) {
             // Verwijder oude afbeelding indien aanwezig
-            if ($newsItem->image) {
-                Storage::disk('public')->delete($newsItem->image);
+            if ($news->image) {
+                Storage::disk('public')->delete($news->image);
             }
 
             $validated['image'] = $request->file('image')->store('news', 'public');
         }
 
-        $newsItem->update($validated);
+        $news->update($validated);
 
-        return redirect()->route('news.show', $newsItem)->with('success', 'Bericht bijgewerkt.');
+        return redirect()->route('news.show', $news)->with('success', 'Bericht bijgewerkt.');
     }
 
     /**
      * Remove the specified news item from storage (admin only).
      */
-    public function destroy(NewsItem $newsItem)
+    public function destroy(NewsItem $news)
     {
         if (!Auth::check() || !Auth::user()->is_admin) {
             abort(403);
         }
 
         // Verwijder gekoppelde afbeelding
-        if ($newsItem->image) {
-            Storage::disk('public')->delete($newsItem->image);
+        if ($news->image) {
+            Storage::disk('public')->delete($news->image);
         }
 
-        $newsItem->delete();
+        $news->delete();
 
-        return redirect()->route('admin.news.index')->with('success', 'Bericht verwijderd.');
+        return redirect()->route('news.index')->with('success', 'Bericht verwijderd.');
     }
 
     public function show(NewsItem $newsItem)

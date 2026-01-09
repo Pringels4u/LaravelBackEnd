@@ -8,8 +8,10 @@
 
                 @auth
                     @if(auth()->user()->is_admin)
-                        <a href="{{ route('admin.news.edit', $newsItem) }}" class="text-sm px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700">Bewerk</a>
-                        <form action="{{ route('admin.news.destroy', $newsItem) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bericht wilt verwijderen?');" style="display:inline">
+                        <form action="{{ route('admin.news.edit', $newsItem) }}" method="GET" style="display:inline">
+                            <button type="submit" class="text-sm px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700" style="background:#4f46e5;color:#ffffff;padding:6px 8px;border-radius:6px;border:none;">Bewerk</button>
+                        </form>
+                        <form action="{{ route('admin.news.destroy', ['news' => $newsItem->id]) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bericht wilt verwijderen?');" style="display:inline;margin-left:6px;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-sm px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Verwijder</button>
