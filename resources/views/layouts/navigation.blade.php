@@ -2,9 +2,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                <div class="shrink-0 flex items-center" style="gap:10px;">
+                    <a href="{{ route('dashboard') }}" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+                        {{-- Theme primary color: orange (fallback inline color) --}}
+                        <x-application-logo class="block h-9 w-auto fill-current" style="color:#f97316;" />
+                        <span style="font-weight:600;color:#1f2937;font-size:1.125rem;">{{ config('app.name', 'Chiro Lembeek') }}</span>
                     </a>
                 </div>
 

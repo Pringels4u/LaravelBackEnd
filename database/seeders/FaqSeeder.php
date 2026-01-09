@@ -12,18 +12,30 @@ class FaqSeeder extends Seeder
      */
     public function run(): void
 {
-    // Maak eerst een categorie
-    $category = \App\Models\Category::create(['name' => 'Algemeen']);
+    // Algemene vragen over Chiro Lembeek
+    $general = \App\Models\Category::firstOrCreate(['name' => 'Algemeen']);
 
-    // Voeg daar vragen aan toe
-    $category->faqItems()->create([
-        'question' => 'Hoe maak ik een account?',
-        'answer' => 'Klik op de registreer knop rechtsboven.'
+    $general->faqItems()->create([
+        'question' => 'Wat is Chiro Lembeek?',
+        'answer' => 'Chiro Lembeek is een jeugdbeweging die wekelijks activiteiten organiseert voor kinderen en jongeren in Lembeek.'
     ]);
 
-    $category->faqItems()->create([
-        'question' => 'Is deze website gratis?',
-        'answer' => 'Ja, voor studenten is dit volledig gratis.'
+    $general->faqItems()->create([
+        'question' => 'Wanneer zijn de activiteiten?',
+        'answer' => 'De groepsactiviteiten vinden plaats op zaterdag van 14:00 tot 17:00, tenzij anders vermeld op de kalender.'
+    ]);
+
+    // Activiteiten gerelateerde vragen
+    $activities = \App\Models\Category::firstOrCreate(['name' => 'Activiteiten']);
+
+    $activities->faqItems()->create([
+        'question' => 'Hoe schrijf ik mijn kind in voor een weekendkamp?',
+        'answer' => 'Deelnemers kunnen zich inschrijven via het inschrijvingsformulier of door contact op te nemen met de leiding.'
+    ]);
+
+    $activities->faqItems()->create([
+        'question' => 'Wat moet mijn kind meebrengen?',
+        'answer' => 'Een slaapzak, comfortabele kledij, persoonlijk bestek, en eventuele medicatie. De leiding stuurt een volledige paklijst voor elk kamp.'
     ]);
 }
 }

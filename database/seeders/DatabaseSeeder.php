@@ -15,16 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Maak de admin gebruiker aan
-        \App\Models\User::create([
-            'name' => 'Admin User',
-            'username' => 'admin',
-            'email' => 'admin@ehb.be',
-            'email_verified_at' => now(),
-            'password' => \Illuminate\Support\Facades\Hash::make('Password!321'),
-            'is_admin' => true, // Dit maakt hem admin!
-        ]);
+        // Maak de admin gebruiker aan (idempotent)
+        \App\Models\User::firstOrCreate(
+            ['email' => 'admin@ehb.be'],
+            [
+                'name' => 'Admin User',
+                'username' => 'admin',
+                'email_verified_at' => now(),
+                'password' => \Illuminate\Support\Facades\Hash::make('Password!321'),
+                'is_admin' => true, // Dit maakt hem admin!
+            ]
+        );
     // Roep je FAQ seeder aan
     $this->call(FaqSeeder::class);
+    // Voeg wat voorbeeld nieuws toe over Chiro Lembeek
+    $this->call(NewsSeeder::class);
 }
 }
