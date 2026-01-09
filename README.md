@@ -20,43 +20,35 @@ Quick facts
 
 This project contains some theme and UI polish for "Chiro Lembeek": the app name is set accordingly and the dashboard, navigation and seed data were updated to reflect the theme.
 
-Getting started (minimal)
-1. Copy `.env.example` to `.env` and configure your DB and mail settings.
+Getting started (Herd — recommended)
+
+This project is intended to be run with Herd for development and evaluation. If your teacher will run the project with Herd, follow these minimal steps:
+
+1. Copy `.env.example` to `.env` and configure your DB and mail settings if you want to change them.
+
 2. Install PHP dependencies:
 
 ```powershell
 composer install
 ```
 
-3. (Optional) Install Node dependencies and build assets if you want Tailwind-based styling:
-
-```powershell
-npm install
-# for development
-npm run dev
-# or for production
-npm run build
-```
-
-4. Run migrations and seed sample data:
+3. Run migrations and seed the sample data:
 
 ```powershell
 php artisan migrate --seed
-# or to reset completely:
-php artisan migrate:fresh --seed
 ```
 
-5. Make the storage symlink so uploaded images are served:
+4. Create the public storage symlink so uploaded images are served:
 
 ```powershell
 php artisan storage:link
 ```
 
-6. Start the site (Herd or built-in server):
+5. In Herd, add a new site and point it to the project root (the repository folder). Configure the hostname (for example `laravelbackend.test`) if needed and start the site. Herd will serve the application and handle asset linking for you — no `npm` or `vite` steps are required when using Herd.
+
+If you do not use Herd and want to run the project manually, a quick alternative is:
 
 ```powershell
-# Herd: point site to project root and use http://laravelbackend.test
-# Built-in PHP server (quick alternative)
 php -S 127.0.0.1:8000 -t public
 ```
 
