@@ -19,10 +19,17 @@
             @forelse($newsItems as $item)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 border-indigo-500">
                     <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900">{{ $item->title }}</h3>
-                            <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($item->published_at)->format('d-m-Y H:i') }}</p>
-                        </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $item->title }}</h3>
+                                <p class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($item->published_at)->format('d-m-Y H:i') }}</p>
+                            </div>
+                            <div class="ml-4">
+                                @auth
+                                    @if(auth()->user()->is_admin)
+                                        <a href="{{ route('admin.news.edit', $item) }}" class="text-sm px-2 py-1 bg-indigo-600 text-white rounded">Bewerk</a>
+                                    @endif
+                                @endauth
+                            </div>
                         <div class="ml-4">
                             @auth
                                 <form action="{{ route('news.favorite.toggle', $item) }}" method="POST">

@@ -1,10 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ $newsItem->title }}
-            </h2>
-            <a href="{{ route('news.index') }}" class="text-sm text-gray-600 hover:underline">&larr; Terug naar overzicht</a>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $newsItem->title }}</h2>
+
+            <div class="flex items-center gap-3">
+                <a href="{{ route('news.index') }}" class="text-sm text-gray-600 hover:underline">&larr; Terug naar overzicht</a>
+
+                @auth
+                    @if(auth()->user()->is_admin)
+                        <a href="{{ route('admin.news.edit', $newsItem) }}" class="text-sm px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700">Bewerk</a>
+                        <form action="{{ route('admin.news.destroy', $newsItem) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bericht wilt verwijderen?');" style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-sm px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Verwijder</button>
+                        </form>
+                    @endif
+                @endauth
+            </div>
         </div>
     </x-slot>
 
