@@ -163,3 +163,7 @@ Bronvermelding
 - Laravel documentatie — https://laravel.com/docs
 - Gebruikte packages en scaffolding: controllers en views voor authenticatie staan onder `app/Http/Controllers/Auth` en `resources/views/auth` — als je een externe tutorial of package (bv. Laravel Breeze) hebt gebruikt, vermeld dat hier expliciet.
 - UI: Tailwind CSS (indien gebruikt) — https://tailwindcss.com
+- Laravel Feature Testing: https://laravel.com/docs/testing
+- Laravel Eloquent Relationships & Pivot Tables: https://laravel.com/docs/eloquent-relationships
+
+- Heb copilot Alleen gebruikt op het einde om te zien of ik alle features geimplementeerd had
